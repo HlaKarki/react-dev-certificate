@@ -9,6 +9,7 @@
 
 ### Mermaid code
 ```
+
 sequenceDiagram
 Browser->>Server: GET https://studies.cs.helsinki.fi/exampleapp/notes
 activate Server
@@ -31,5 +32,6 @@ activate Server
 Server-->>Browser: [{content: "00000000", date: "2023-04-13T21:46:07.541Z"}, ...]
 deactivate Server
 Note right of Browser: "The broser executing the callback function that renders the notes"
+
 ```
 
