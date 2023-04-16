@@ -2,8 +2,8 @@ import { useState } from "react";
 
 // a proper place to define a component
 const Button = ( {setValue, value, text}) => <button onClick={() => handleClick(setValue, value)}>{text}</button>
-const Stats = ( {text, value, percentage}) => <div>{text} {value} {percentage}</div>
-const FeedInfo = ( {good, neutral, bad, all, average, positive}) => {
+const StatisticLine = ( {text, value, percentage}) => <div>{text} {value} {percentage}</div>
+const Statistics = ( {good, neutral, bad, all, average, positive}) => {
     if (all === 0) {
         return (
             <div>No feedback given</div>
@@ -11,12 +11,12 @@ const FeedInfo = ( {good, neutral, bad, all, average, positive}) => {
     }
     return (
         <div>
-            <Stats text={"good"} value={good} />
-            <Stats text={"neutral"} value={neutral} />
-            <Stats text={"bad"} value={bad} />
-            <Stats text={"all"} value={all} />
-            <Stats text={"average"} value={average} />
-            <Stats text={"positive"} value={positive} percentage={"%"}/>
+            <StatisticLine text={"good"} value={good} />
+            <StatisticLine text={"neutral"} value={neutral} />
+            <StatisticLine text={"bad"} value={bad} />
+            <StatisticLine text={"all"} value={all} />
+            <StatisticLine text={"average"} value={average} />
+            <StatisticLine text={"positive"} value={positive} percentage={"%"}/>
         </div>
     )
 }
@@ -42,7 +42,7 @@ const App = () => {
             <Button setValue={setBad} value={bad} text={"bad"} />
 
             <h1>statistics</h1>
-            <FeedInfo good={good} neutral={neutral} bad={bad} all={all} average={average} positive={positive}/>
+            <Statistics good={good} neutral={neutral} bad={bad} all={all} average={average} positive={positive}/>
         </div>
     )
 }
