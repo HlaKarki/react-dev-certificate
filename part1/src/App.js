@@ -2,7 +2,14 @@ import { useState } from "react";
 
 // a proper place to define a component
 const Button = ( {setValue, value, text}) => <button onClick={() => handleClick(setValue, value)}>{text}</button>
-const StatisticLine = ( {text, value, percentage}) => <div>{text} {value} {percentage}</div>
+const StatisticLine = ( {text, value, percentage}) => {
+    return (
+        <tr>
+            <td>{text}</td>
+            <td>{value} {percentage}</td>
+        </tr>
+    )
+}
 const Statistics = ( {good, neutral, bad, all, average, positive}) => {
     if (all === 0) {
         return (
@@ -10,14 +17,16 @@ const Statistics = ( {good, neutral, bad, all, average, positive}) => {
         )
     }
     return (
-        <div>
-            <StatisticLine text={"good"} value={good} />
-            <StatisticLine text={"neutral"} value={neutral} />
-            <StatisticLine text={"bad"} value={bad} />
-            <StatisticLine text={"all"} value={all} />
-            <StatisticLine text={"average"} value={average} />
-            <StatisticLine text={"positive"} value={positive} percentage={"%"}/>
-        </div>
+        <table>
+            <tbody>
+                <StatisticLine text={"good"} value={good} />
+                <StatisticLine text={"neutral"} value={neutral} />
+                <StatisticLine text={"bad"} value={bad} />
+                <StatisticLine text={"all"} value={all} />
+                <StatisticLine text={"average"} value={average} />
+                <StatisticLine text={"positive"} value={positive} percentage={"%"}/>
+            </tbody>
+        </table>
     )
 }
 
