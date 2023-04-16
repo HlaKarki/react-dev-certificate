@@ -1,5 +1,6 @@
 import { useState } from "react";
 
+// a proper place to define a component
 const handleClick = (setValue, value) => setValue(value+1)
 const Button = ( {setValue, value, text}) => <button onClick={() => handleClick(setValue, value)}>{text}</button>
 const Stats = ( {text, value, percentage}) => <div>{text} {value} {percentage}</div>
