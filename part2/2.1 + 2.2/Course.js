@@ -22,7 +22,7 @@ const Total = ({ parts }) => {
         totalExercise += part.exercises
     )
     return (
-        <p>Number of exercises {totalExercise}</p>
+        <h4>total of {totalExercise} exercises</h4>
     )
 }
 
