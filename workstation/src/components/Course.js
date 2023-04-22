@@ -1,6 +1,4 @@
-const Header = ({ name }) => {
-    return <h1>{name}</h1>
-}
+const Header = ({ name }) => <h1>{name}</h1>
 
 const Content = ({ parts }) => {
     return (
@@ -12,18 +10,13 @@ const Content = ({ parts }) => {
     )
 }
 
-const Part = ({ part }) => {
-    return <p>{part.name} {part.exercises}</p>
-}
+const Part = ({ part }) => <p>{part.name} {part.exercises}</p>
 
 const Total = ({ parts }) => {
-    let totalExercise = 0
-    parts.map(part =>
-        totalExercise += part.exercises
+    const totalExercises = parts.reduce(
+        (acc, cur) => acc + cur.exercises, 0
     )
-    return (
-        <h4>total of {totalExercise} exercises</h4>
-    )
+    return <h4>total of {totalExercises} exercises</h4>
 }
 
 const Course = ({ course }) => {
