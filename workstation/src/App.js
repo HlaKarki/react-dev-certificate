@@ -11,7 +11,8 @@ const App = () => {
         const newObject = {
             name: newName
         }
-        setPersons(persons.concat(newObject))
+        const isValid = persons.find(person => person.name === newObject.name && person.name !== '')
+        isValid ? alert(`${newObject.name} is already added to phonebook`) : setPersons(persons.concat(newObject))
         setNewName('')
     }
 
