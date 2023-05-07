@@ -1,71 +1,91 @@
 import { useState, useEffect } from 'react'
-import { default as Filter } from './components/part2/Filter'
-import { default as PersonForm } from './components/part2/PersonForm'
-import { default as Persons } from './components/part2/Persons'
-import { default as PersonsFiltered } from './components/part2/PersonsFiltered'
-import axios from "axios";
+import axios from 'axios'
+import Note from './components/Note'
+import {default as noteService} from './services/notes'
 
 const App = () => {
-    const [persons, setPersons] = useState([])
-    const [newName, setNewName] = useState('')
-    const [newNumber, setNewNumber] = useState('')
-    const [newFilter, setNewFilter] = useState('')
-    const [newPersons, setNewPersons] = useState([])
+    const [notes, setNotes] = useState([])
+    const [newNote, setNewNote] = useState('')
+    const [showAll, setShowAll] = useState(false)
 
-    const hook = () => {
-        console.log('effect');
+    useEffect(() => {
+        console.log('effect')
         axios
-            .get('http://localhost:3001/persons')
+            .get('http://localhost:3001/notes')
             .then(response => {
-                console.log('promise fulfilled');
-                setPersons(response.data)
+                console.log('promise fulfilled')
+                setNotes(response.data)
+            })
+    }, [])
+
+    useEffect( () => {
+        noteService
+            .getAll()
+            .then(initialNotes => {
+                setNotes(initialNotes)
+            })
+    }, [])
+
+    console.log('render', notes.length, 'notes')
+
+    const addNote = (event) => {
+        event.preventDefault()
+        const noteObject = {
+            content: newNote,
+            important: Math.random() > 0.5,
+            id: notes.length + 1,
+        }
+
+        noteService
+            .create(noteObject)
+            .then(returnedNote => {
+                setNotes(notes.concat(returnedNote.data))
+                setNewNote('')
             })
     }
-    useEffect(hook, [])
 
-    const addNewName = (event) => {
-        event.preventDefault()
-        const newObject = {
-            name: newName,
-            number: newNumber
-        }
-        const isValid = persons.find(person => (person.name === newObject.name || person.number === newObject.number) && person.name !== '')
-        isValid ? alert(`${newObject.name} or ${newObject.number} is already added to phonebook`) : setPersons(persons.concat(newObject))
-        setNewName('')
-        setNewNumber('')
+    const handleNoteChange = (event) => {
+        setNewNote(event.target.value)
     }
 
-    const newNameChange = (event) => {
-        setNewName(event.target.value)
-    }
+    const notesToShow = showAll
+        ? notes
+        : notes.filter(note => note.important)
 
-    const newNumberChange = (event) => {
-        setNewNumber(event.target.value)
-    }
+    const toggleImportanceOf = (id) => {
+        const note = notes.find(n => n.id === id)
+        const changedNote = {...note, important: !note.important}
 
-    const filterName = (event) => {
-        event.preventDefault()
-        const filteredPersons = persons.filter( person =>
-            person.name.toLowerCase().includes(event.target.value.toLowerCase())
-        )
-        setNewPersons(filteredPersons)
-    }
-
-    const newFilterChange = (event) => {
-        setNewFilter(event.target.value)
+        noteService
+            .update(id, changedNote)
+            .then(returnedNote => {
+                setNotes(notes.map(note => note.id !== id ? note : returnedNote))
+            })
     }
 
     return (
         <div>
-            <h2>Phonebook</h2>
-            <Filter filterName={filterName} newFilter={newFilter} newFilterChange={newFilterChange}/>
-
-            <h2>add a new</h2>
-            <PersonForm addNewName={addNewName} newName={newName} newNameChange={newNameChange} newNumberChange={newNumberChange} newNumber={newNumber} />
-
-            <h2>Numbers</h2>
-            {newFilter!=='' ? <PersonsFiltered newPersons={newPersons}/> : <Persons persons={persons} />}
-
+            <h1>Notes</h1>
+            <div>
+                <button onClick={() => setShowAll(!showAll)}>
+                    show {showAll ? 'important' : 'all' }
+                </button>
+            </div>
+            <ul>
+                <ul>
+                    {notesToShow.map(note =>
+                        <Note
+                            key={note.id}
+                            note={note}
+                            toggleImportance={ ()=> toggleImportanceOf(note.id)}
+                        />
+                    )}
+                </ul>
+            </ul>
+            <form onSubmit={addNote}>
+                <input value={newNote} onChange={handleNoteChange} />
+                <button type="submit">save</button>
+            </form>
         </div>
     )
 }
