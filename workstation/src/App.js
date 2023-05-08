@@ -24,10 +24,20 @@ const App = () => {
             name: newName,
             number: newNumber
         }
-        const isValid = persons.find(person => (person.name === newObject.name || person.number === newObject.number) && person.name !== '')
-        isValid ?
-            alert(`${newObject.name} or ${newObject.number} is already added to phonebook`)
-            : phonebookService.create(newObject).then(responseData => setPersons(persons.concat(responseData)))
+        const isNotValid = persons.find(person => (person.name === newObject.name) && person.name !== '')
+        if (isNotValid) {
+            const confirm = window.confirm(`${newObject.name} is already added to phonebook. Do you wish to replace the old number with a new one?`)
+            if (confirm) {
+                phonebookService.updateContact(isNotValid.id, newObject)
+                    .then(newPersons => {
+                        setPersons(persons.map(p => p.id !== isNotValid.id ? p : newPersons))
+                    })
+            }
+
+        }
+        else {
+            phonebookService.create(newObject).then(responseData => setPersons(persons.concat(responseData)))
+        }
         setNewName('')
         setNewNumber('')
     }
