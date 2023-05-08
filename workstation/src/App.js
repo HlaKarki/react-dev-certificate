@@ -5,8 +5,6 @@ import { default as Persons } from './components/part2/Persons'
 import { default as PersonsFiltered } from './components/part2/PersonsFiltered'
 import { default as phonebookService } from './services/phonebook'
 
-import axios from "axios";
-
 const App = () => {
     const [persons, setPersons] = useState([])
     const [newName, setNewName] = useState('')
@@ -15,13 +13,8 @@ const App = () => {
     const [newPersons, setNewPersons] = useState([])
 
     const hook = () => {
-        console.log('in hook:');
-        axios
-            .get('http://localhost:3001/persons')
-            .then(response => {
-                console.log('== promise fulfilled');
-                setPersons(response.data)
-            })
+        phonebookService.getAll()
+            .then(allPersons => setPersons(allPersons))
     }
     useEffect(hook, [])
 
